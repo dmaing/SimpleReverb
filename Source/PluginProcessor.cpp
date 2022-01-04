@@ -166,21 +166,68 @@ bool SimpleReverbAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* SimpleReverbAudioProcessor::createEditor()
 {
-    return new SimpleReverbAudioProcessorEditor (*this);
+    //return new SimpleReverbAudioProcessorEditor (*this);
+    return new juce::GenericAudioProcessorEditor(*this);
 }
 
 //==============================================================================
-void SimpleReverbAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void SimpleReverbAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+
+    juce::MemoryOutputStream mos(destData, true);
+    apvts.state.writeToStream(mos);
 }
 
 void SimpleReverbAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+    auto tree = juce::ValueTree::readFromData(data, sizeInBytes);
+    if (tree.isValid())
+    {
+        apvts.replaceState(tree);
+    }
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout SimpleReverbAudioProcessor::createParameterLayout()
+{
+    APVTS::ParameterLayout layout;
+
+    using namespace juce;
+
+    layout.add(std::make_unique<AudioParameterFloat>("Room Size",
+        "Room Size",
+        NormalisableRange<float>(0.f, 1.f, 0.1f, 1.f),
+        0.5f));
+
+    layout.add(std::make_unique<AudioParameterFloat>("Damping",
+        "Damping",
+        NormalisableRange<float>(0.f, 1.f, 0.1f, 1.f),
+        0.5f));
+
+    layout.add(std::make_unique<AudioParameterFloat>("Wet Level",
+        "Wet Level",
+        NormalisableRange<float>(0.f, 1.f, 0.01f, 1.f),
+        1.f));
+
+    layout.add(std::make_unique<AudioParameterFloat>("Dry Level",
+        "Dry Level",
+        NormalisableRange<float>(0.f, 1.f, 0.01f, 1.f),
+        0.f));
+
+    layout.add(std::make_unique<AudioParameterFloat>("Width",
+        "Width",
+        NormalisableRange<float>(0.f, 1.f, 0.1f, 1.f),
+        1.f));
+
+    layout.add(std::make_unique<AudioParameterBool>("Freeze Mode",
+        "Freeze Mode",
+        false));
+
+    return layout;
 }
 
 //==============================================================================
