@@ -91,7 +91,7 @@ private:
 
     ButtonAttachment freezeModeButtonAttachment;
 
-    juce::File* resources = new juce::File("C:/JUCE/SimpleReverb/Resources");
+    juce::File normalImageFile, downImageFile;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SimpleReverbAudioProcessorEditor)
 };

@@ -120,9 +120,10 @@ SimpleReverbAudioProcessorEditor::SimpleReverbAudioProcessorEditor(SimpleReverbA
 
     freezeModeButton.setClickingTogglesState(true);
 
-    auto normalImageFile = resources->getChildFile("1F976_color.png");
-    auto downImageFile = resources->getChildFile("1F975_color.png");
+    normalImageFile = juce::File::getCurrentWorkingDirectory().getChildFile("../../Resources/1F976_color.png");
+    downImageFile = juce::File::getCurrentWorkingDirectory().getChildFile("../../Resources/1F975_color.png");
     jassert(normalImageFile.existsAsFile() && downImageFile.existsAsFile());
+    //DBG(juce::File::getCurrentWorkingDirectory().getChildFile("..").getFileName() + "!!!!!!!!!!!!!!!!!!");
 
     auto normalImage = juce::ImageCache::getFromFile(normalImageFile);
     auto downImage = juce::ImageCache::getFromFile(downImageFile);
