@@ -189,8 +189,8 @@ bool SimpleReverbAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* SimpleReverbAudioProcessor::createEditor()
 {
-    //return new SimpleReverbAudioProcessorEditor (*this);
-    return new juce::GenericAudioProcessorEditor(*this);
+    return new SimpleReverbAudioProcessorEditor (*this);
+    //return new juce::GenericAudioProcessorEditor(*this);
 }
 
 //==============================================================================
