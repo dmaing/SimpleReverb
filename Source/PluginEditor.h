@@ -91,11 +91,7 @@ private:
 
     ButtonAttachment freezeModeButtonAttachment;
 
-    
-
-    juce::File* normalImageFile = new juce::File("C:/JUCE/SimpleReverb/1F976_color.png");
-
-    juce::ImageCache *normalImageCache;
+    juce::File* resources = new juce::File("C:/JUCE/SimpleReverb/Resources");
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SimpleReverbAudioProcessorEditor)
 };
