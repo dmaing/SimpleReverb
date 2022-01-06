@@ -31,7 +31,7 @@ SimpleReverbAudioProcessor::SimpleReverbAudioProcessor()
     width = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter("Width"));
     jassert(width != nullptr);
 
-    dryWet = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter("DryWet"));
+    dryWet = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter("Dry Wet"));
     jassert(dryWet != nullptr);
 
     freezeMode = dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter("Freeze Mode"));
@@ -231,8 +231,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout SimpleReverbAudioProcessor::
         NormalisableRange<float>(0.f, 1.f, 0.01f, 1.f),
         0.5f));
 
-    layout.add(std::make_unique<AudioParameterFloat>("DryWet",
-        "DryWet",
+    layout.add(std::make_unique<AudioParameterFloat>("Dry Wet",
+        "Dry Wet",
         NormalisableRange<float>(0.f, 1.f, 0.01f, 1.f),
         0.5f));
 
