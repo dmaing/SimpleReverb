@@ -22,6 +22,20 @@ SimpleReverbAudioProcessor::SimpleReverbAudioProcessor()
                        )
 #endif
 {
+    roomSize = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter("Room Size"));
+    jassert(roomSize != nullptr);
+
+    damping = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter("Damping"));
+    jassert(damping != nullptr);
+
+    width = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter("Width"));
+    jassert(width != nullptr);
+
+    dryWet = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter("DryWet"));
+    jassert(dryWet != nullptr);
+
+    freezeMode = dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter("Freeze Mode"));
+    jassert(freezeMode != nullptr);
 }
 
 SimpleReverbAudioProcessor::~SimpleReverbAudioProcessor()
@@ -95,6 +109,13 @@ void SimpleReverbAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+
+    juce::dsp::ProcessSpec spec;
+    spec.maximumBlockSize = samplesPerBlock;
+    spec.numChannels = getTotalNumOutputChannels();
+    spec.sampleRate = sampleRate;
+
+    reverb.prepare(spec);
 }
 
 void SimpleReverbAudioProcessor::releaseResources()
@@ -144,18 +165,20 @@ void SimpleReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
+    reverbParams.roomSize = roomSize->get();
+    reverbParams.damping = damping->get();
+    reverbParams.width = width->get();
+    reverbParams.wetLevel = dryWet->get();
+    reverbParams.dryLevel = 1.f - dryWet->get();
+    reverbParams.freezeMode = freezeMode->get();
 
-        // ..do something to the data...
-    }
+    reverb.setParameters(reverbParams);
+
+
+    auto block = juce::dsp::AudioBlock<float>(buffer);
+    auto context = juce::dsp::ProcessContextReplacing<float>(block);
+
+    reverb.process(context);
 }
 
 //==============================================================================
@@ -200,28 +223,23 @@ juce::AudioProcessorValueTreeState::ParameterLayout SimpleReverbAudioProcessor::
 
     layout.add(std::make_unique<AudioParameterFloat>("Room Size",
         "Room Size",
-        NormalisableRange<float>(0.f, 1.f, 0.1f, 1.f),
+        NormalisableRange<float>(0.f, 1.f, 0.01f, 1.f),
         0.5f));
 
     layout.add(std::make_unique<AudioParameterFloat>("Damping",
         "Damping",
-        NormalisableRange<float>(0.f, 1.f, 0.1f, 1.f),
+        NormalisableRange<float>(0.f, 1.f, 0.01f, 1.f),
         0.5f));
 
-    layout.add(std::make_unique<AudioParameterFloat>("Wet Level",
-        "Wet Level",
+    layout.add(std::make_unique<AudioParameterFloat>("DryWet",
+        "DryWet",
         NormalisableRange<float>(0.f, 1.f, 0.01f, 1.f),
-        1.f));
-
-    layout.add(std::make_unique<AudioParameterFloat>("Dry Level",
-        "Dry Level",
-        NormalisableRange<float>(0.f, 1.f, 0.01f, 1.f),
-        0.f));
+        0.5f));
 
     layout.add(std::make_unique<AudioParameterFloat>("Width",
         "Width",
-        NormalisableRange<float>(0.f, 1.f, 0.1f, 1.f),
-        1.f));
+        NormalisableRange<float>(0.f, 1.f, 0.01f, 1.f),
+        0.5f));
 
     layout.add(std::make_unique<AudioParameterBool>("Freeze Mode",
         "Freeze Mode",

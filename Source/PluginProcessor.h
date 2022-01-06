@@ -60,6 +60,16 @@ public:
     APVTS apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 
 private:
+
+    juce::dsp::Reverb reverb;
+    juce::dsp::Reverb::Parameters reverbParams;
+
+    // cached pointers to parameters
+    juce::AudioParameterFloat* roomSize{ nullptr };
+    juce::AudioParameterFloat* damping{ nullptr };
+    juce::AudioParameterFloat* dryWet{ nullptr };
+    juce::AudioParameterFloat* width{ nullptr };
+    juce::AudioParameterBool* freezeMode{ nullptr };
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SimpleReverbAudioProcessor)
 };
