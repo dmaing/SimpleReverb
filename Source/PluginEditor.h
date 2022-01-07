@@ -32,6 +32,11 @@ struct LookAndFeel : juce::LookAndFeel_V4
         float rotaryStartAngle,
         float rotaryEndAngle,
         juce::Slider& slider) override;
+
+    void drawButtonBackground(juce::Graphics& g, juce::Button& button,
+        const juce::Colour& backgroundColour,
+        bool shouldDrawButtonAsHighlighted,
+        bool shouldDrawButtonAsDown) override;
 };
 
 struct RotarySlider : juce::Slider
@@ -60,6 +65,25 @@ private:
     LookAndFeel lnf;
 };
 
+//struct Button : juce::ImageButton
+//{
+//    Button(const juce::String& title)
+//    {
+//        setName(title);
+//        setLookAndFeel(&lnf);
+//    }
+//
+//    ~Button()
+//    {
+//        setLookAndFeel(nullptr);
+//    }
+//
+//    void paint(juce::Graphics& g) override;
+//
+//private:
+//    LookAndFeel lnf;
+//};
+
 /**
 */
 class SimpleReverbAudioProcessorEditor  : public juce::AudioProcessorEditor
@@ -77,21 +101,36 @@ private:
     // access the processor object that created it.
     SimpleReverbAudioProcessor& audioProcessor;
 
-    RotarySlider roomSizeSlider, widthSlider, dampingSlider, dryWetSlider;
+    RotarySlider roomSizeSlider, //sliders
+        widthSlider,
+        dampingSlider,
+        dryWetSlider;
 
     juce::ImageButton freezeModeButton;
 
+    // slider attachments
     using APVTS = juce::AudioProcessorValueTreeState;
     using Attachment = APVTS::SliderAttachment;
 
-    Attachment roomSizeSliderAttachment, widthSliderAttachment,
-        dampingSliderAttachment, dryWetSliderAttachment;
+    Attachment roomSizeSliderAttachment, 
+        widthSliderAttachment,
+        dampingSliderAttachment,
+        dryWetSliderAttachment;
 
+    // button attachment
     using ButtonAttachment = APVTS::ButtonAttachment;
 
     ButtonAttachment freezeModeButtonAttachment;
 
-    juce::File normalImageFile, downImageFile;
+    juce::Image normalImage = juce::ImageCache::getFromMemory(BinaryData::_1F976_color_png,
+        BinaryData::_1F976_color_pngSize);
+    juce::Image downImage = juce::ImageCache::getFromMemory(BinaryData::_1F975_color_png,
+        BinaryData::_1F975_color_pngSize);
+    
+    //juce::Image normalImage = juce::ImageCache::getFromMemory(BinaryData::_1F976_color_png,
+    //    BinaryData::_1F976_color_pngSize);
+    //juce::Image downImage = juce::ImageCache::getFromMemory(BinaryData::_1F975_color_png,
+    //    BinaryData::_1F975_color_pngSize);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SimpleReverbAudioProcessorEditor)
 };

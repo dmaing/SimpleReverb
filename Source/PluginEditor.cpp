@@ -24,12 +24,14 @@ void LookAndFeel::drawRotarySlider(juce::Graphics& g,
 {
     using namespace juce;
 
+    const juce::Colour mainColor = juce::Colour(45, 117, 150);
+
     auto bounds = Rectangle<float>(x, y, width, height);
 
     g.setColour(juce::Colours::white);
     g.fillEllipse(bounds);
 
-    g.setColour(Colour(147, 212, 245));
+    g.setColour(mainColor);
     g.drawEllipse(bounds, 1.2f);
 
     if (auto* rswl = dynamic_cast<RotarySlider*>(&slider))
@@ -61,9 +63,26 @@ void LookAndFeel::drawRotarySlider(juce::Graphics& g,
         r.setSize(strWidth + 4, rswl->getTextHeight() + 2);
         r.setCentre(bounds.getCentre());
 
-        g.setColour(Colour(147, 212, 245));
+        g.setColour(mainColor);
         g.drawFittedText(text, r.toNearestInt(), juce::Justification::centred, 1);
     }
+}
+
+void LookAndFeel::drawButtonBackground(juce::Graphics& g, juce::Button& button,
+    const juce::Colour& backgroundColour,
+    bool shouldDrawButtonAsHighlighted,
+    bool shouldDrawButtonAsDown)
+{
+    auto bounds = button.getLocalBounds();
+
+    const juce::Colour mainColor = juce::Colour(45, 117, 150);
+
+    juce::Rectangle<float> r;
+    r.setSize(bounds.getWidth() - 6, bounds.getHeight() - 6);
+    r.setCentre(bounds.getCentreX(), bounds.getCentreY());
+
+    g.setColour(mainColor);
+    g.drawRoundedRectangle(r, 5.f, 1.f);
 }
 
 void RotarySlider::paint(juce::Graphics& g)
@@ -99,6 +118,14 @@ juce::Rectangle<int> RotarySlider::getSliderBounds() const
     return r;
 }
 
+//void Button::paint(juce::Graphics& g)
+//{
+//
+//    const juce::Colour mainColor = juce::Colour(45, 117, 150);
+//
+//    getLookAndFeel().drawButtonBackground(g, *this, mainColor, false, false);
+//}
+
 //==============================================================================
 SimpleReverbAudioProcessorEditor::SimpleReverbAudioProcessorEditor(SimpleReverbAudioProcessor& p)
     : AudioProcessorEditor(&p), audioProcessor(p),
@@ -120,15 +147,7 @@ SimpleReverbAudioProcessorEditor::SimpleReverbAudioProcessorEditor(SimpleReverbA
 
     freezeModeButton.setClickingTogglesState(true);
 
-    normalImageFile = juce::File::getCurrentWorkingDirectory().getChildFile("../../Resources/1F976_color.png");
-    downImageFile = juce::File::getCurrentWorkingDirectory().getChildFile("../../Resources/1F975_color.png");
-    jassert(normalImageFile.existsAsFile() && downImageFile.existsAsFile());
-    //DBG(juce::File::getCurrentWorkingDirectory().getChildFile("..").getFileName() + "!!!!!!!!!!!!!!!!!!");
-
-    auto normalImage = juce::ImageCache::getFromFile(normalImageFile);
-    auto downImage = juce::ImageCache::getFromFile(downImageFile);
-
-    freezeModeButton.setImages(false,
+    freezeModeButton.setImages(true,
         true,
         true,
         normalImage,

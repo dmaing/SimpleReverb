@@ -4,6 +4,10 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" cppLanguageStandard="20"
               companyName="DMusic">
   <MAINGROUP id="mNTFh8" name="SimpleReverb">
+    <GROUP id="{4E0AE5EE-1ACF-516E-89B3-7B59110A7BED}" name="Resources">
+      <FILE id="zFDrw2" name="1F975_color.png" compile="0" resource="1" file="Resources/1F975_color.png"/>
+      <FILE id="CjEiSw" name="1F976_color.png" compile="0" resource="1" file="Resources/1F976_color.png"/>
+    </GROUP>
     <GROUP id="{B0721AD4-2C05-F435-0D19-AFA0ABC83BBE}" name="Source">
       <FILE id="yZCclm" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
