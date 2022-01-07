@@ -37,6 +37,10 @@ struct LookAndFeel : juce::LookAndFeel_V4
         const juce::Colour& backgroundColour,
         bool shouldDrawButtonAsHighlighted,
         bool shouldDrawButtonAsDown) override;
+private:
+    const juce::Colour mainColor = juce::Colour((uint8_t)45, 117, 150, 0.6f);
+    const juce::Font mainFont = juce::Font(12.f, juce::Font::bold);
+
 };
 
 struct RotarySlider : juce::Slider
@@ -58,7 +62,7 @@ struct RotarySlider : juce::Slider
 
     void paint(juce::Graphics& g) override;
     juce::Rectangle<int> getSliderBounds() const;
-    int getTextHeight() const { return 14; }
+    int getTextHeight() const { return 12; }
 
 private:
     juce::RangedAudioParameter* param;
@@ -126,11 +130,6 @@ private:
         BinaryData::_1F976_color_pngSize);
     juce::Image downImage = juce::ImageCache::getFromMemory(BinaryData::_1F975_color_png,
         BinaryData::_1F975_color_pngSize);
-    
-    //juce::Image normalImage = juce::ImageCache::getFromMemory(BinaryData::_1F976_color_png,
-    //    BinaryData::_1F976_color_pngSize);
-    //juce::Image downImage = juce::ImageCache::getFromMemory(BinaryData::_1F975_color_png,
-    //    BinaryData::_1F975_color_pngSize);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SimpleReverbAudioProcessorEditor)
 };

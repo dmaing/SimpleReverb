@@ -24,8 +24,6 @@ void LookAndFeel::drawRotarySlider(juce::Graphics& g,
 {
     using namespace juce;
 
-    const juce::Colour mainColor = juce::Colour(45, 117, 150);
-
     auto bounds = Rectangle<float>(x, y, width, height);
 
     g.setColour(juce::Colours::white);
@@ -55,7 +53,7 @@ void LookAndFeel::drawRotarySlider(juce::Graphics& g,
 
         g.fillPath(p);
 
-        g.setFont(rswl->getTextHeight());
+        g.setFont(mainFont);
         auto text = rswl->getName();
         auto strWidth = g.getCurrentFont().getStringWidth(text);
 
@@ -74,8 +72,6 @@ void LookAndFeel::drawButtonBackground(juce::Graphics& g, juce::Button& button,
     bool shouldDrawButtonAsDown)
 {
     auto bounds = button.getLocalBounds();
-
-    const juce::Colour mainColor = juce::Colour(45, 117, 150);
 
     juce::Rectangle<float> r;
     r.setSize(bounds.getWidth() - 6, bounds.getHeight() - 6);
@@ -166,7 +162,7 @@ SimpleReverbAudioProcessorEditor::SimpleReverbAudioProcessorEditor(SimpleReverbA
     addAndMakeVisible(dryWetSlider);
     addAndMakeVisible(freezeModeButton);
 
-    setSize (180, 540);
+    setSize (200, 450);
 }
 
 SimpleReverbAudioProcessorEditor::~SimpleReverbAudioProcessorEditor()
