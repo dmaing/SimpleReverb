@@ -41,7 +41,7 @@ void LookAndFeel::drawRotarySlider(juce::Graphics& g,
         r.setLeft(center.getX() - 2);
         r.setRight(center.getX() + 2);
         r.setTop(bounds.getY());
-        r.setBottom(center.getY() - rswl->getTextHeight() * 2.2f);
+        r.setBottom(center.getY() - rswl->getTextHeight());
 
         p.addRoundedRectangle(r, 2.f);
 
@@ -52,17 +52,6 @@ void LookAndFeel::drawRotarySlider(juce::Graphics& g,
         p.applyTransform(AffineTransform().rotated(sliderAngRad, center.getX(), center.getY()));
 
         g.fillPath(p);
-
-        g.setFont(mainFont);
-        auto text = rswl->getName();
-        auto strWidth = g.getCurrentFont().getStringWidth(text);
-
-        // Rectangle in which text will go that describes slider function
-        r.setSize(strWidth + 4, rswl->getTextHeight() + 2);
-        r.setCentre(bounds.getCentre());
-
-        g.setColour(mainColor);
-        g.drawFittedText(text, r.toNearestInt(), juce::Justification::centred, 1);
     }
 }
 
@@ -91,6 +80,25 @@ void RotarySlider::paint(juce::Graphics& g)
     auto range = getRange();
 
     auto sliderBounds = getSliderBounds();
+    auto bounds = getLocalBounds();
+
+    juce::Rectangle<float> r;
+    r.setSize(bounds.getWidth() - 6, bounds.getHeight() - 6);
+    r.setCentre(bounds.getCentreX(), bounds.getCentreY());
+
+    g.setColour(mainColor);
+    g.drawRoundedRectangle(r, 5.f, 1.f);
+
+    g.setFont(mainFont);
+    auto text = this->getName();
+    auto strWidth = g.getCurrentFont().getStringWidth(text);
+
+    //Rectangle in which text will go that describes slider function
+    bounds.setSize(strWidth + 4, this->getTextHeight() + 2);
+    bounds.setLeft(r.getX() + 5);
+    bounds.setTop(r.getY() + 3);
+
+    g.drawFittedText(text, bounds.toNearestInt(), juce::Justification::centred, 1);
 
     getLookAndFeel().drawRotarySlider(g, sliderBounds.getX(), sliderBounds.getY(), sliderBounds.getWidth(),
         sliderBounds.getHeight(), jmap(getValue(), range.getStart(), range.getEnd(), 0.0, 1.0),
@@ -104,7 +112,7 @@ juce::Rectangle<int> RotarySlider::getSliderBounds() const
 
     auto size = juce::jmin(bounds.getWidth(), bounds.getHeight());
 
-    size -= getTextHeight() * 2;
+    size -= getTextHeight() * 3;
 
     juce::Rectangle<int> r;
     r.setSize(size, size);
@@ -125,7 +133,7 @@ juce::Rectangle<int> RotarySlider::getSliderBounds() const
 //==============================================================================
 SimpleReverbAudioProcessorEditor::SimpleReverbAudioProcessorEditor(SimpleReverbAudioProcessor& p)
     : AudioProcessorEditor(&p), audioProcessor(p),
-    roomSizeSlider(*audioProcessor.apvts.getParameter("Room Size"), "Size"),
+    roomSizeSlider(*audioProcessor.apvts.getParameter("Room Size"), "Room Size"),
     widthSlider(*audioProcessor.apvts.getParameter("Width"), "Width"),
     dampingSlider(*audioProcessor.apvts.getParameter("Damping"), "Damping"),
     dryWetSlider(*audioProcessor.apvts.getParameter("Dry Wet"), "Dry/Wet"),

@@ -39,8 +39,6 @@ struct LookAndFeel : juce::LookAndFeel_V4
         bool shouldDrawButtonAsDown) override;
 private:
     const juce::Colour mainColor = juce::Colour((uint8_t)45, 117, 150, 0.6f);
-    const juce::Font mainFont = juce::Font(12.f, juce::Font::bold);
-
 };
 
 struct RotarySlider : juce::Slider
@@ -67,6 +65,9 @@ struct RotarySlider : juce::Slider
 private:
     juce::RangedAudioParameter* param;
     LookAndFeel lnf;
+    const juce::Font mainFont = juce::Font(12.f, juce::Font::bold);
+    const juce::Colour mainColor = juce::Colour(45, 117, 150);
+
 };
 
 //struct Button : juce::ImageButton
